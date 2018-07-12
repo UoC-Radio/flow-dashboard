@@ -28,6 +28,7 @@ from lxml import etree
 from xml.dom import minidom
 from urllib.request import urlopen
 from threading import Thread
+from time import sleep
 
 from helpers import Playlist, getPlaylistNameFromPath, MENU, XSD_FALLBACK_SCHEMA, WEEK, APP_TITLE
 from view import View
@@ -357,6 +358,7 @@ class Controller(Application):
 			week = root.getchildren()               # Get week element
 			for dayIndex, day in enumerate(week):   # Get a day of the week
 				idle_add(updateProgressBar)
+				sleep(0.1)
 				zones = day.getchildren()           # Get the zones of this day
 				for zone in zones:
 					# Only the name and the start time of a zone is needed to add it to the Flow Schedule.
@@ -446,6 +448,7 @@ class Controller(Application):
 							self.fillPlaylistElement(playlistElement, intermediatePlaylistRow)
 
 				idle_add(updateProgressBar)
+				sleep(0.1)
 
 			# Remove empty elements
 			self.clearEmptyElements(weekElement)
@@ -474,6 +477,7 @@ class Controller(Application):
 				f.write(dom.toprettyxml(indent='\t', encoding='UTF-8').decode())
 				idle_add(self.view.Dialogs.showMessagePopup, self.view, MessageType.INFO, 'Info', 'Export successful.')
 			idle_add(updateProgressBar)
+			sleep(0.1)
 			idle_add(destroyProgressBar)
 
 		"""
