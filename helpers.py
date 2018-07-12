@@ -45,12 +45,12 @@ class Playlist:
 
 CSS = """
 .minus-button {
-	background-color: coral;
+	background-color: darkred;
 	background-blend-mode: luminosity;
 }
 
 .plus-button {
-	background-color: green;
+	background-color: darkgreen;
 	background-blend-mode: luminosity;
 }
 
