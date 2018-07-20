@@ -79,6 +79,8 @@ class Controller(Application):
 
 		# Make the GUI visible.
 		# Note that Zone Inspector is set initially invisible, until a zone is selected.
+		self.view.set_wmclass("Flow Dashboard", "Flow Dashboard")
+		self.view.set_icon_from_file("gallery/logo.png")
 		self.view.show_all()
 		self.view.zoneInspector.hide()
 
