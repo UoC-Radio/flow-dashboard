@@ -96,7 +96,6 @@ class Model:
 		self.zoneInspector[newZoneName] = self.zoneInspector[oldZoneName]
 		del self.zoneInspector[oldZoneName]
 
-
 	""" Adds a playlist to database. """
 	def addPlaylistToDatabase(self, playlistPath):
 		playlistName = getPlaylistNameFromPath(playlistPath)
