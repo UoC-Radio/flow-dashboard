@@ -95,20 +95,12 @@ class View(Gtk.ApplicationWindow):
 			self.schedule[dayIndex].enable_model_drag_dest([Gtk.TargetEntry.new('UTF8_STRING', Gtk.TargetFlags.SAME_APP, 0)], Gdk.DragAction.COPY)
 			self.schedule[dayIndex].connect('drag-data-received', self.callbacks.onDragDataReceivedZone)
 			self.schedule[dayIndex].get_selection().connect('changed', self.callbacks.onScheduleRowSelected)
-
-			columnTitle = 'Hour'
-			renderer = Gtk.CellRendererText(editable=True)
-			renderer.connect('edited', self.callbacks.onScheduleRowEdited, dayIndex, 0)
-			column = Gtk.TreeViewColumn(columnTitle, renderer, text=0)
-			column.set_sort_column_id(0)
-			self.schedule[dayIndex].append_column(column)
-
-			columnTitle = 'Name'
-			renderer = Gtk.CellRendererText()
-			column = Gtk.TreeViewColumn(columnTitle, renderer, text=1)
-			column.set_sort_column_id(1)
-			self.schedule[dayIndex].append_column(column)
-
+			for i, columnTitle in enumerate(['Hour', 'Name']):
+				renderer = Gtk.CellRendererText(editable=True)
+				renderer.connect('edited', self.callbacks.onScheduleRowEdited, dayIndex, i)
+				column = Gtk.TreeViewColumn(columnTitle, renderer, text=i)
+				column.set_sort_column_id(i)
+				self.schedule[dayIndex].append_column(column)
 			scrollview = Gtk.ScrolledWindow()
 			scrollview.set_vexpand(True)
 			scrollview.add(self.schedule[dayIndex])

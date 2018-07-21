@@ -172,8 +172,17 @@ class Controller(Application):
 
 		""" User edits a Flow Schedule row. """
 		def onScheduleRowEdited(self, renderer, path, newString, dayIndex, column):
-			# Update the model accordingly.
-			self.model.schedule[dayIndex][path][column] = newString
+			if column != 1:
+				# Update the model accordingly.
+				self.model.schedule[dayIndex][path][column] = newString
+			elif not self.model.zoneExistsInDatabase(newString):
+				# New zone does not exist in database. Notify the user.
+				self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error', 'Zone does not exist in database.')
+			elif self.model.schedule[dayIndex][path][column] != newString:
+				# User changes a zone's name in Flow Schedule.
+				self.model.schedule[dayIndex][path][column] = newString
+
+
 
 		""" User edits a Zones row. """
 		def onZoneRowEdited(self, renderer, path, newString, column):
@@ -181,7 +190,7 @@ class Controller(Application):
 				# Update the model accordingly.
 				self.model.zones[path][column] = newString
 			elif not self.model.zoneExistsInDatabase(newString):
-				# User changes a zone's name.
+				# User changes a zone's name in Zones.
 				oldZoneName = self.model.zones[path][column]
 				self.model.editZoneNameInDatabase(oldZoneName, newString)
 			elif self.model.zones[path][column] != newString:
