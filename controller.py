@@ -177,8 +177,16 @@ class Controller(Application):
 
 		""" User edits a Zones row. """
 		def onZoneRowEdited(self, renderer, path, newString, column):
-			# Update the model accordingly.
-			self.model.zones[path][column] = newString
+			if column != 0:
+				# Update the model accordingly.
+				self.model.zones[path][column] = newString
+			elif not self.model.zoneExistsInDatabase(newString):
+				# User changes a zone's name.
+				oldZoneName = self.model.zones[path][column]
+				self.model.editZoneNameInDatabase(oldZoneName, newString)
+			elif self.model.zones[path][column] != newString:
+				# New zone already exists in database. Notify the user.
+				self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error', 'Zone already exists.')
 
 		""" User edits a Zone Inspector row. """
 		def onZoneInspectorRowEdited(self, renderer, path, newString, column):
@@ -367,12 +375,12 @@ class Controller(Application):
 					zoneName = zone.get('Name')
 					zoneStartTime = zone.get('Start')[:-3]      # Use -3 to ignore seconds in the time format
 					self.model.addZoneToSchedule(dayIndex, zoneName, zoneStartTime)
-					# Do not parse the current zone if it is already (parsed and) added to the database.
+					# Do not parse the current zone if it is already (parsed and) added to database.
 					# Here we assume that every occurrence of a zone in the Flow Schedule is identical
 					# to all the other occurrences of the same zone. Thus, we only have to parse it once,
 					# the first time we encounter it.
 					if not self.model.zoneExistsInDatabase(zoneName):
-						# Get the zone's metadata and add it to the database
+						# Get the zone's metadata and add it to database
 						zoneMaintainers = zoneDescription = zoneComments = ''
 						if zone.find('Maintainer') is not None: zoneMaintainers = zone.find('Maintainer').text
 						if zone.find('Description') is not None: zoneDescription = zone.find('Description').text

@@ -142,7 +142,8 @@ class View(Gtk.ApplicationWindow):
 		self.zones.connect('drag-data-get', self.callbacks.onDragDataGrabbedZone)
 		self.zones.get_selection().connect('changed', self.callbacks.onZoneRowSelected)
 		columnTitle = 'Name'
-		renderer = Gtk.CellRendererText()
+		renderer = Gtk.CellRendererText(editable=True)
+		renderer.connect('edited', self.callbacks.onZoneRowEdited, 0)
 		column = Gtk.TreeViewColumn(columnTitle, renderer, text=0)
 		column.set_sort_column_id(0)
 		self.zones.append_column(column)

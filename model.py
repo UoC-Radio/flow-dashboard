@@ -54,7 +54,7 @@ class Model:
 
 	## Public methods ##
 	"""
-	Adds a zone to the database.
+	Adds a zone to database.
 	Consequently, it initializes its inspector.
 	"""
 	def addZoneToDatabase(self, zoneName, zoneMaintainers='', zoneDescription='', zoneComments=''):
@@ -78,7 +78,26 @@ class Model:
 		self.zoneInspector[zoneName].clear()
 		del self.zoneInspector[zoneName]
 
-	""" Adds a playlist to the database. """
+	"""
+	Edits a zone's name in the database.
+	Consequently, it renames all its instances in the Flow Schedule and its Zone Inspector.
+	"""
+	def editZoneNameInDatabase(self, oldZoneName, newZoneName):
+		zoneRow = self.getZoneRow(oldZoneName)
+		self.zones[zoneRow][0] = newZoneName
+		for dayIndex in range(7):
+			while True:
+				scheduleRow = self.getRowOfItemInColumnOfModel(oldZoneName, 1, self.schedule[dayIndex])
+				if scheduleRow is not None:
+					self.schedule[dayIndex][scheduleRow][1] = newZoneName
+				else:
+					break
+		self.initZoneInspector(newZoneName)
+		self.zoneInspector[newZoneName] = self.zoneInspector[oldZoneName]
+		del self.zoneInspector[oldZoneName]
+
+
+	""" Adds a playlist to database. """
 	def addPlaylistToDatabase(self, playlistPath):
 		playlistName = getPlaylistNameFromPath(playlistPath)
 		self.playlists.append((playlistName, playlistPath))
@@ -170,7 +189,7 @@ class Model:
 				return treeiter
 		return None
 
-	""" Initializes the Zone Inspector. """
+	""" Initializes zoneName's Zone Inspector. """
 	def initZoneInspector(self, zoneName):
 		self.zoneInspector[zoneName] = ListStore(str, str, bool, str, str, str, str, str, str)
 		self.zoneInspector[zoneName].set_sort_column_id(1, SortType.DESCENDING)
