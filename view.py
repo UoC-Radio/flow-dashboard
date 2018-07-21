@@ -176,7 +176,8 @@ class View(Gtk.ApplicationWindow):
 		self.zoneInspector.connect('drag-data-received', self.callbacks.onDragDataReceivedPlaylist)
 		self.zoneInspector.get_selection().connect('changed', self.callbacks.onZoneInspectorRowSelected)
 		columnTitle = 'Name'
-		renderer = Gtk.CellRendererText()
+		renderer = Gtk.CellRendererText(editable=True)
+		renderer.connect('edited', self.callbacks.onZoneInspectorRowEdited, 0)
 		column = Gtk.TreeViewColumn(columnTitle, renderer, text=0)
 		column.set_sort_column_id(0)
 		self.zoneInspector.append_column(column)

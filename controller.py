@@ -182,8 +182,6 @@ class Controller(Application):
 				# User changes a zone's name in Flow Schedule.
 				self.model.schedule[dayIndex][path][column] = newString
 
-
-
 		""" User edits a Zones row. """
 		def onZoneRowEdited(self, renderer, path, newString, column):
 			if column != 0:
@@ -199,9 +197,16 @@ class Controller(Application):
 
 		""" User edits a Zone Inspector row. """
 		def onZoneInspectorRowEdited(self, renderer, path, newString, column):
-			# Get selected zone and update the model accordingly.
 			zoneSelected = self.model.zones[self.view.zones.get_selection().get_selected()[1]][0]
-			self.model.zoneInspector[zoneSelected][path][column] = newString
+			if column != 0:
+				# Update the model accordingly.
+				self.model.zoneInspector[zoneSelected][path][column] = newString
+			elif not self.model.playlistExistsInDatabase(newString):
+				# New playlist does not exist in database. Notify the user.
+				self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error', 'Playlist does not exist in database.')
+			elif self.model.zoneInspector[zoneSelected][path][column] != newString:
+				# User changes a playlist's name in Zone Inspector.
+				self.model.zoneInspector[zoneSelected][path][column] = newString
 
 		""" User changes the playlist type in a Zone Inspector row. """
 		def onPlaylistTypeChanged(self, widget, path, newPlaylistType):
