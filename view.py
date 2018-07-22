@@ -178,6 +178,7 @@ class View(Gtk.ApplicationWindow):
 		columnTitle = 'Name'
 		renderer = Gtk.CellRendererText(editable=True)
 		renderer.connect('edited', self.callbacks.onZoneInspectorRowEdited, 0)
+		renderer.connect('editing-started', self.callbacks.onZoneInspectorRowEditingStarted, 0)
 		column = Gtk.TreeViewColumn(columnTitle, renderer, text=0)
 		column.set_sort_column_id(0)
 		self.zoneInspector.append_column(column)

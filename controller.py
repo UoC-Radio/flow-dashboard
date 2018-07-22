@@ -202,6 +202,14 @@ class Controller(Application):
 				# New zone already exists in database. Notify the user.
 				self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error', 'Zone already exists.')
 
+		""" User starts editing a Zone Inspector row. """
+		def onZoneInspectorRowEditingStarted(self, renderer, editable, path, column):
+			if column == 0:
+				completion = EntryCompletion.new()
+				completion.set_model(self.model.playlists)
+				completion.set_text_column(0)
+				editable.set_completion(completion)
+
 		""" User edits a Zone Inspector row. """
 		def onZoneInspectorRowEdited(self, renderer, path, newString, column):
 			zoneSelected = self.model.zones[self.view.zones.get_selection().get_selected()[1]][0]
