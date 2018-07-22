@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository.Gtk import Application, Builder, Entry, MessageType, ResponseType
+from gi.repository.Gtk import Application, Builder, Entry, MessageType, ResponseType, EntryCompletion
 from gi.repository.Gio import SimpleAction
 from gi.repository.GLib import idle_add
 from lxml import etree
@@ -30,7 +30,7 @@ from urllib.request import urlopen
 from threading import Thread
 from time import sleep
 
-from helpers import Playlist, getPlaylistNameFromPath, MENU, XSD_FALLBACK_SCHEMA, WEEK, APP_TITLE
+from helpers import Playlist, getPlaylistNameFromPath, MENU, XSD_FALLBACK_SCHEMA, WEEK, APP_TITLE, getHoursModel
 from view import View
 from model import Model
 
@@ -169,6 +169,13 @@ class Controller(Application):
 			if rowToRemove is not None:
 				zoneName = self.model.zones[self.view.zones.get_selection().get_selected()[1]][0]
 				self.model.removePlaylistFromZone(zoneName, rowToRemove)
+
+		""" User starts editing a Flow Schedule row. """
+		def onScheduleRowEditingStarted(self, renderer, editable, path, column):
+			completion = EntryCompletion.new()
+			completion.set_model(self.model.zones if column == 1 else getHoursModel())
+			completion.set_text_column(0)
+			editable.set_completion(completion)
 
 		""" User edits a Flow Schedule row. """
 		def onScheduleRowEdited(self, renderer, path, newString, dayIndex, column):

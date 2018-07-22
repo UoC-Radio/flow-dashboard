@@ -77,7 +77,6 @@ class View(Gtk.ApplicationWindow):
 
 		# Weekly Schedule HeaderBar
 		self.scheduleHeaderBar = Gtk.HeaderBar(title='Flow Schedule', subtitle='What we play on air')
-
 		self.removeZoneFromScheduleButton = Gtk.Button.new_from_icon_name('list-remove-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
 		self.removeZoneFromScheduleButton.get_style_context().add_class('minus-button')
 		self.removeZoneFromScheduleButton.set_tooltip_text('Remove zone from schedule')
@@ -98,6 +97,7 @@ class View(Gtk.ApplicationWindow):
 			for i, columnTitle in enumerate(['Hour', 'Name']):
 				renderer = Gtk.CellRendererText(editable=True)
 				renderer.connect('edited', self.callbacks.onScheduleRowEdited, dayIndex, i)
+				renderer.connect('editing-started', self.callbacks.onScheduleRowEditingStarted, i)
 				column = Gtk.TreeViewColumn(columnTitle, renderer, text=i)
 				column.set_sort_column_id(i)
 				self.schedule[dayIndex].append_column(column)

@@ -20,11 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from os.path import basename
+from gi.repository.Gtk import ListStore, SortType
 
 """ Functions, classes, constants and embedded files that are used throughout the application. """
 
-WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 APP_TITLE = 'Autopilot Schedule'
+
+WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+HOURS = None
+def getHoursModel():
+	global HOURS
+	if HOURS is None:
+		HOURS = ListStore(str)
+		HOURS.set_sort_column_id(0, SortType.ASCENDING)
+		for i in range(24):
+			HOURS.append((str(i).zfill(2) + ':00',))
+	return HOURS
 
 def getPlaylistNameFromPath(playlistPath):
 	return basename(playlistPath).split('.')[0]
