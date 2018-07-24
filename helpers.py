@@ -19,14 +19,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+""" Constants, functions, classes and embedded files that are used throughout the application. """
+
 from os.path import basename
 from gi.repository.Gtk import ListStore, SortType
 
-""" Functions, classes, constants and embedded files that are used throughout the application. """
+
+# Constants
 
 APP_TITLE = 'Autopilot Schedule'
 
 WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+XSD_SCHEMA_URL =\
+'https://raw.githubusercontent.com/UoC-Radio/audio-scheduler/master/config_schema.xsd'
+
+
+# Functions
 
 HOURS = None
 def getHoursModel():
@@ -41,9 +50,13 @@ def getHoursModel():
 def getPlaylistNameFromPath(playlistPath):
 	return basename(playlistPath).split('.')[0]
 
+
+# Classes
+
 class Playlist:
 
-	def __init__(self, name='', type='', shuffle='', schedIntervalMins='', numSchedItems='', fadeInSecs='', fadeOutSecs='', minLevel='', maxLevel=''):
+	def __init__(self, name='', type='', shuffle='', schedIntervalMins='', numSchedItems='',
+				 fadeInSecs='', fadeOutSecs='', minLevel='', maxLevel=''):
 		self.name = name
 		self.type = type
 		self.shuffle = shuffle
@@ -54,6 +67,8 @@ class Playlist:
 		self.minLevel = minLevel
 		self.maxLevel = maxLevel
 
+
+# Embedded files
 
 CSS = """
 .minus-button {
@@ -88,7 +103,7 @@ MENU = """<?xml version="1.0" encoding="UTF-8"?>
 </interface>
 """
 
-XSD_FALLBACK_SCHEMA = """<?xml version="1.0" encoding="UTF-8" ?>
+XSD_SCHEMA_FALLBACK = """<?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <xs:simpleType name="FadeDurationSecs">
