@@ -560,11 +560,13 @@ class Controller(Application):
 					idle_add(destroyProgressBar)
 					return
 			idle_add(updateProgressBar)
+			sleep(0.1)
 
 			# Download and parse XSD schema
 			if self.xmlSchema is None:
 				self.downloadAndParseXSDSchema()
 			idle_add(updateProgressBar)
+			sleep(0.1)
 
 			# Validate input XML file against schema
 			root = tree.getroot()
@@ -580,12 +582,11 @@ class Controller(Application):
 						 MessageType.WARNING, 'Warning',
 						 'Validation of input won\'t be performed.')
 			idle_add(updateProgressBar)
+			sleep(0.1)
 
 			# Do import
 			week = root.getchildren()               # Get week element
 			for dayIndex, day in enumerate(week):   # Get a day of the week
-				idle_add(updateProgressBar)
-				sleep(0.1)
 				zones = day.getchildren()           # Get the zones of this day
 				for zone in zones:
 					# Only the name and the start time of a zone is needed to add it to the Flow Schedule.
@@ -626,6 +627,8 @@ class Controller(Application):
 									if playlistChild.tag == 'SchedIntervalMins': playlist.schedIntervalMins = playlistChild.text
 									if playlistChild.tag == 'NumSchedItems': playlist.numSchedItems = playlistChild.text
 								self.model.addPlaylistToZone(zoneName, playlist)
+				idle_add(updateProgressBar)
+				sleep(0.1)
 			self.view.set_title(inputXmlPath + ' \u2014 ' + APP_TITLE)
 			idle_add(destroyProgressBar)
 
@@ -680,12 +683,12 @@ class Controller(Application):
 
 			# Remove empty elements
 			self.clearEmptyElements(weekElement)
-			idle_add(updateProgressBar)
 
 			# Download and parse XSD schema
 			if self.xmlSchema is None:
 				self.downloadAndParseXSDSchema()
 			idle_add(updateProgressBar)
+			sleep(0.1)
 
 			# Validate output XML data against schema
 			if self.xmlSchema is not None:
@@ -700,6 +703,7 @@ class Controller(Application):
 						 MessageType.WARNING, 'Warning',
 						 'Validation of output won\'t be performed.')
 			idle_add(updateProgressBar)
+			sleep(0.1)
 
 			# Output XML data to file
 			with open(outputXmlPath, 'w') as f:
