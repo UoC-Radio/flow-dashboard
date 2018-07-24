@@ -36,6 +36,7 @@ from helpers import Playlist, getPlaylistNameFromPath, MENU, XSD_SCHEMA_URL,\
 from view import View
 from model import Model
 
+
 class Controller(Application):
 	""" Coordinate the communication between the Model and the View.
 
@@ -529,6 +530,7 @@ class Controller(Application):
 					   self.progressBarWindow.update,
 					   self.progressBarWindow.destroy)).start()
 			exportXMLDialog.destroy()
+
 
 	class XML:
 		""" Perform XML-related operations. """

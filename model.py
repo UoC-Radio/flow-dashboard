@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from gi.repository.Gtk import ListStore, SortType, TreePath
 from helpers import Playlist, getPlaylistNameFromPath
 
+
 class Model:
 	""" Hold the application's data, as well as operations on them.
 

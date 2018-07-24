@@ -19,11 +19,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-""" Constants, functions, classes and embedded files that are used throughout the application. """
-
 from os.path import basename
 from gi.repository.Gtk import ListStore, SortType
 
+
+""" Constants, functions, classes and embedded files that are used throughout the application. """
 
 # Constants
 
@@ -38,6 +38,7 @@ XSD_SCHEMA_URL =\
 # Functions
 
 HOURS = None
+
 def getHoursModel():
 	global HOURS
 	if HOURS is None:

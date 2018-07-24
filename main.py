@@ -21,6 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from controller import Controller
 
-""" Starts the controller, which subclasses Application. """
+
 if __name__ == '__main__':
+	""" Start the controller.
+
+	It subclasses Application.
+	"""
 	Controller().run()

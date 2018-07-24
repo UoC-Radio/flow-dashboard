@@ -24,6 +24,7 @@ from gi.repository.Gio import SimpleAction
 from gi.repository.Pango import WrapMode
 from helpers import CSS, WEEK
 
+
 class View(Gtk.ApplicationWindow):
 	""" The application's GUI. """
 
@@ -286,6 +287,7 @@ class View(Gtk.ApplicationWindow):
 		scrollview.add(self.playlists)
 		self.playlistBox.add(scrollview)
 
+
 	class Dialogs:
 		""" All the dialogs that might be displayed. """
 
@@ -301,6 +303,7 @@ class View(Gtk.ApplicationWindow):
 			messageArea.show_all()
 			errorMessagePopup.run()
 			errorMessagePopup.destroy()
+
 
 		class AddZone(Gtk.Dialog):
 
@@ -375,6 +378,7 @@ class View(Gtk.ApplicationWindow):
 				self.add_filter(allFilter)
 				self.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
 				self.add_button('Export', Gtk.ResponseType.OK)
+
 
 	class Windows:
 		""" All the windows that might be displayed, apart from the main window. """
