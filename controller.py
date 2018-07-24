@@ -585,52 +585,94 @@ class Controller(Application):
 			sleep(0.1)
 
 			# Do import
-			week = root.getchildren()               # Get week element
-			for dayIndex, day in enumerate(week):   # Get a day of the week
-				zones = day.getchildren()           # Get the zones of this day
-				for zone in zones:
-					# Only the name and the start time of a zone is needed to add it to the Flow Schedule.
-					zoneName = zone.get('Name')
-					zoneStartTime = zone.get('Start')[:-3]      # Use -3 to ignore seconds in the time format
-					self.model.addZoneToSchedule(dayIndex, zoneName, zoneStartTime)
-					# Do not parse the current zone if it is already (parsed and) added to the database.
-					# It is assumed that every occurrence of a zone in the Flow Schedule is identical
-					# to all the other occurrences of the same zone. Thus, it only has to be parsed once,
-					# the first time it is encountered.
-					if not self.model.zoneExistsInDatabase(zoneName):
-						# Get the zone's metadata and add it to the database
-						zoneMaintainers = zoneDescription = zoneComments = ''
-						if zone.find('Maintainer') is not None: zoneMaintainers = zone.find('Maintainer').text
-						if zone.find('Description') is not None: zoneDescription = zone.find('Description').text
-						if zone.find('Comment') is not None: zoneComments = zone.find('Comment').text
-						self.model.addZoneToDatabase(zoneName, zoneMaintainers, zoneDescription, zoneComments)
-						# Get the playlists of this zone
-						for zoneChild in zone.getchildren():
-							if zoneChild.tag == 'Main' or zoneChild.tag == 'Fallback' or zoneChild.tag == 'Intermediate':
-								# Parse the current playlist.
-								# Note that, unlike the zones, it has to be parsed every time it is encountered
-								# because its configuration settings may differ depending on the zone it appears in.
-								playlist = Playlist()
-								playlist.type = zoneChild.tag
-								for playlistChild in zoneChild.getchildren():
-									if playlistChild.tag == 'Path':
-										playlist.name = getPlaylistNameFromPath(playlistChild.text)
-										if not self.model.playlistExistsInDatabase(playlist.name):
-											self.model.addPlaylistToDatabase(playlistChild.text)
-									if playlistChild.tag == 'Shuffle': playlist.shuffle = (playlistChild.text == 'true')
-									if playlistChild.tag == 'Fader':
-										for faderChild in playlistChild.getchildren():
-											if faderChild.tag == 'FadeInDurationSecs': playlist.fadeInSecs = faderChild.text
-											if faderChild.tag == 'FadeOutDurationSecs': playlist.fadeOutSecs = faderChild.text
-											if faderChild.tag == 'MinLevel': playlist.minLevel = faderChild.text
-											if faderChild.tag == 'MaxLevel': playlist.maxLevel = faderChild.text
-									if playlistChild.tag == 'SchedIntervalMins': playlist.schedIntervalMins = playlistChild.text
-									if playlistChild.tag == 'NumSchedItems': playlist.numSchedItems = playlistChild.text
-								self.model.addPlaylistToZone(zoneName, playlist)
+
+			# Get a day of the week
+			for dayIndex, day in enumerate(root.getchildren()):
+
+				# Import its zones one by one
+				for zone in day.getchildren():
+					self.importZone(zone, dayIndex)
 				idle_add(updateProgressBar)
 				sleep(0.1)
+
+			# Add imported file's location to main window title
 			self.view.set_title(inputXmlPath + ' \u2014 ' + APP_TITLE)
 			idle_add(destroyProgressBar)
+
+		def importZone(self, zoneElement, dayIndex):
+			"""
+			1) Add zone to Flow Schedule.
+			2) Add it to the Zones database.
+			3) Import its playlists.
+			"""
+			# Get the name and start time of a zone to add it to the Flow Schedule
+			zoneName = zoneElement.get('Name')
+			zoneStartTime = zoneElement.get('Start')[:-3]	# Use -3 to ignore seconds
+			self.model.addZoneToSchedule(dayIndex, zoneName, zoneStartTime)
+
+			# Do not parse this zone element if the zone is
+			# already (parsed and) added to the database.
+			# It is assumed that every occurrence of a zone in the Flow Schedule
+			# is identical to all the other occurrences of the same zone.
+			# Thus, it only has to be parsed once, the first time it is encountered.
+			if not self.model.zoneExistsInDatabase(zoneName):
+
+				# Get the zone's metadata and add it to the database
+				zoneMaintainers = zoneDescription = zoneComments = ''
+				maintainerElement = zoneElement.find('Maintainer')
+				if maintainerElement is not None:
+						zoneMaintainers = maintainerElement.text
+				descriptionElement = zoneElement.find('Description')
+				if descriptionElement is not None:
+						zoneDescription = descriptionElement.text
+				commentElement = zoneElement.find('Comment')
+				if commentElement is not None:
+						zoneComments = commentElement.text
+				self.model.addZoneToDatabase(zoneName, zoneMaintainers,
+											 zoneDescription, zoneComments)
+
+				# Import its playlists one by one
+				for zoneChild in zoneElement.getchildren():
+					if zoneChild.tag in ['Main', 'Intermediate', 'Fallback']:
+						self.importPlaylist(zoneName, zoneChild)
+
+		def importPlaylist(self, zoneName, playlistElement):
+			"""
+			1) Add playlist to zoneName's inspector.
+			2) Add it to the Playlists database.
+			"""
+			# Parse this playlist element.
+			# Note that, unlike the zones, it has to be parsed every time it is
+			# encountered because its configuration settings may differ
+			# depending on the zone it appears in.
+			playlist = Playlist()
+			playlist.type = playlistElement.tag
+			for playlistChild in playlistElement.getchildren():
+				if playlistChild.tag == 'Path':
+					playlist.name = getPlaylistNameFromPath(playlistChild.text)
+
+					# In case it is the first time this playlist is encountered,
+					# add it to the database.
+					if not self.model.playlistExistsInDatabase(playlist.name):
+						self.model.addPlaylistToDatabase(playlistChild.text)
+
+				if playlistChild.tag == 'Shuffle':
+					playlist.shuffle = (playlistChild.text == 'true')
+				if playlistChild.tag == 'Fader':
+					for faderChild in playlistChild.getchildren():
+						if faderChild.tag == 'FadeInDurationSecs':
+							playlist.fadeInSecs = faderChild.text
+						if faderChild.tag == 'FadeOutDurationSecs':
+							playlist.fadeOutSecs = faderChild.text
+						if faderChild.tag == 'MinLevel':
+							playlist.minLevel = faderChild.text
+						if faderChild.tag == 'MaxLevel':
+							playlist.maxLevel = faderChild.text
+				if playlistChild.tag == 'SchedIntervalMins':
+					playlist.schedIntervalMins = playlistChild.text
+				if playlistChild.tag == 'NumSchedItems':
+					playlist.numSchedItems = playlistChild.text
+			self.model.addPlaylistToZone(zoneName, playlist)
 
 		def exportXML(self, outputXmlPath, updateProgressBar, destroyProgressBar):
 			""" Export the GUI content to an XML file.
@@ -647,37 +689,7 @@ class Controller(Application):
 
 				# Add zones to day
 				for scheduleRow in self.model.schedule[dayIndex]:
-					zoneName = scheduleRow[1]
-					zoneStartTime = scheduleRow[0]
-					zoneElement = ET.SubElement(dayElement, 'Zone')
-					zoneElement.set('Name', zoneName)
-					zoneElement.set('Start', zoneStartTime + ':00')
-					zoneRow = self.model.getZoneRow(zoneName)
-					ET.SubElement(zoneElement, 'Maintainer').text = self.model.zones[zoneRow][2]
-					ET.SubElement(zoneElement, 'Description').text = self.model.zones[zoneRow][1]
-					ET.SubElement(zoneElement, 'Comment').text = self.model.zones[zoneRow][3]
-
-					# Add playlists to zone
-					# Add Main
-					mainPlaylistRow = self.model.getMainPlaylistRow(zoneName)
-					if mainPlaylistRow is not None:
-						playlistElement = ET.SubElement(zoneElement, 'Main')
-						self.fillPlaylistElement(playlistElement, self.model.zoneInspector[zoneName][mainPlaylistRow])
-
-					# Add Fallback
-					fallbackPlaylistRow = self.model.getFallbackPlaylistRow(zoneName)
-					if fallbackPlaylistRow is not None:
-						playlistElement = ET.SubElement(zoneElement, 'Fallback')
-						self.fillPlaylistElement(playlistElement, self.model.zoneInspector[zoneName][fallbackPlaylistRow])
-
-					# Add Intermediates
-					for zoneInspectorRow in self.model.zoneInspector[zoneName]:
-						if zoneInspectorRow[1] == 'Intermediate':
-							intermediatePlaylistRow = zoneInspectorRow
-							playlistElement = ET.SubElement(zoneElement, 'Intermediate')
-							playlistElement.set('Name', intermediatePlaylistRow[0])
-							self.fillPlaylistElement(playlistElement, intermediatePlaylistRow)
-
+					self.exportZone(scheduleRow, dayElement)
 				idle_add(updateProgressBar)
 				sleep(0.1)
 
@@ -714,6 +726,48 @@ class Controller(Application):
 			idle_add(updateProgressBar)
 			sleep(0.1)
 			idle_add(destroyProgressBar)
+
+		def exportZone(self, scheduleRow, dayElement):
+			"""
+			1) Add scheduleRow's zone with its metadata to dayElement
+			2) Export its playlists
+			"""
+			zoneStartTime = scheduleRow[0]
+			zoneName = scheduleRow[1]
+			zoneElement = ET.SubElement(dayElement, 'Zone')
+			zoneElement.set('Name', zoneName)
+			zoneElement.set('Start', zoneStartTime + ':00')
+			zoneRow = self.model.getZoneRow(zoneName)
+			ET.SubElement(zoneElement, 'Maintainer').text = self.model.zones[zoneRow][2]
+			ET.SubElement(zoneElement, 'Description').text = self.model.zones[zoneRow][1]
+			ET.SubElement(zoneElement, 'Comment').text = self.model.zones[zoneRow][3]
+
+			# Add playlists to zone
+			self.exportPlaylists(zoneName, zoneElement)
+
+		def exportPlaylists(self, zoneName, zoneElement):
+			""" Add zoneName's playlists to zoneElement """
+			# Add Main
+			mainPlaylistRow = self.model.getMainPlaylistRow(zoneName)
+			if mainPlaylistRow is not None:
+				playlistElement = ET.SubElement(zoneElement, 'Main')
+				self.fillPlaylistElement(playlistElement, self.model.zoneInspector[
+										 				  zoneName][mainPlaylistRow])
+
+			# Add Fallback
+			fallbackPlaylistRow = self.model.getFallbackPlaylistRow(zoneName)
+			if fallbackPlaylistRow is not None:
+				playlistElement = ET.SubElement(zoneElement, 'Fallback')
+				self.fillPlaylistElement(playlistElement, self.model.zoneInspector[
+										 				  zoneName][fallbackPlaylistRow])
+
+			# Add Intermediates
+			for zoneInspectorRow in self.model.zoneInspector[zoneName]:
+				if zoneInspectorRow[1] == 'Intermediate':
+					intermediatePlaylistRow = zoneInspectorRow
+					playlistElement = ET.SubElement(zoneElement, 'Intermediate')
+					playlistElement.set('Name', intermediatePlaylistRow[0])
+					self.fillPlaylistElement(playlistElement, intermediatePlaylistRow)
 
 		def downloadAndParseXSDSchema(self):
 			""" Download XSD schema from the web and parse it.
