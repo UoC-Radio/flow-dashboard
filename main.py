@@ -23,8 +23,8 @@ from controller import Controller
 
 
 if __name__ == '__main__':
-	""" Start the controller.
+    """ Start the controller.
 
-	It subclasses Application.
-	"""
-	Controller().run()
+    It subclasses Application.
+    """
+    Controller().run()
