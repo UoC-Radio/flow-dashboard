@@ -20,9 +20,11 @@ To run flow-dashboard, you will need to have the following installed:
 
 ### Running
 After installing the above dependencies, just do:  
-`git clone https://github.com/UoC-Radio/flow-dashboard`  
-`cd flow-dashboard`  
-`python3 main.py &`
+```
+git clone https://github.com/UoC-Radio/flow-dashboard
+cd flow-dashboard
+python3 main.py &
+```
 
 ## Credits
 [ggalan87](https://github.com/ggalan87) for his advice on GUI design  
