@@ -19,10 +19,10 @@ To run flow-dashboard, you will need to have the following installed:
 * lxml for python 3 [[Instructions]](https://lxml.de/installation.html)
 
 ### Running
-After installing the above dependencies, just do:
-1. git clone https://<span></span>github.com/UoC-Radio/flow-dashboard
-2. cd flow-dashboard
-3. python3 main.py &
+After installing the above dependencies, just do:  
+`git clone https://github.com/UoC-Radio/flow-dashboard`  
+`cd flow-dashboard`  
+`python3 main.py &`
 
 ## Credits
 [ggalan87](https://github.com/ggalan87) for his advice on GUI design  
