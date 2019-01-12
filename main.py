@@ -1,6 +1,4 @@
 """
-Flow Dashboard - A flow schedule and zone management app
-
 Main function
 
 Copyright (C) 2018 Elias Papavasileiou <eliaspap@protonmail.com>

@@ -1,6 +1,4 @@
 """
-Flow Dashboard - A flow schedule and zone management app
-
 The Controller
 
 Copyright (C) 2018 Elias Papavasileiou <eliaspap@protonmail.com>
@@ -38,12 +36,12 @@ from model import Model
 
 
 class Controller(Application):
-    """ Coordinate the communication between the Model and the View.
+    """ Coordinates communication between the Model and the View.
 
     The whole point of MVC is to seperate the data (Model) from the GUI (View),
-    to make the design more modular.
+    to make the design modular.
 
-    Thanks to GTK+, the view gets automatically updated
+    Thanks to GTK+, the view is automatically updated
     whenever the model changes.
     """
 

@@ -1,6 +1,4 @@
 """
-Flow Dashboard - A flow schedule and zone management app
-
 The Model
 
 Copyright (C) 2018 Elias Papavasileiou <eliaspap@protonmail.com>
@@ -24,14 +22,14 @@ from helpers import Playlist, getPlaylistNameFromPath
 
 
 class Model:
-    """ Hold the application's data, as well as operations on them.
+    """ Holds the application's data, as well as operations on them.
 
     The Model consists of four sub-models that correspond to the four main window parts:
     Flow Schedule, Zones, Zone Inspector and Playlists.
     """
 
     def __init__(self):
-        """ Initialize the sub-models.
+        """ Initialize sub-models.
 
         Do not initialize the zoneInspector sub-model,
         because no zone exists on application startup.
