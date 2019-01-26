@@ -79,7 +79,7 @@ class View(Gtk.ApplicationWindow):
 
         # Weekly Schedule HeaderBar
         self.scheduleHeaderBar = Gtk.HeaderBar(title='Flow Schedule',
-                                               subtitle='What we play on air')
+                                               subtitle='Zones that play on air')
         self.removeZoneFromScheduleButton = Gtk.Button.new_from_icon_name(
                                             'list-remove-symbolic',
                                             Gtk.IconSize(Gtk.IconSize.BUTTON))
@@ -180,7 +180,7 @@ class View(Gtk.ApplicationWindow):
 
         # Zone Inspector HeaderBar
         self.zoneInspectorHeaderBar = Gtk.HeaderBar(title='Zone Inspector',
-                                                    subtitle='Playlists of selected zone')
+                                                    subtitle="Contents of selected zone")
         self.removePlaylistFromZoneButton = Gtk.Button.new_from_icon_name(
             'list-remove-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
         self.removePlaylistFromZoneButton.get_style_context().add_class('minus-button')
