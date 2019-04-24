@@ -1,5 +1,5 @@
 # flow-dashboard
-#### A GTK+ based GUI editor of the radio station's on-air schedule.
+#### A GTK+ based GUI generator of the radio station's on-air schedule.
 
 This is a graphical XML generator and database front-end application. It aims to:
 * Facilitate creation of the [XML file](http://radio.uoc.gr/schedule/schedule.xml) given as input to [Audio Scheduler](https://github.com/UoC-Radio/audio-scheduler/).
