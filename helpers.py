@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from os.path import basename
+from os.path import basename, splitext
 from gi.repository.Gtk import ListStore, SortType
 
 
@@ -47,7 +47,7 @@ def getHoursModel():
     return HOURS
 
 def getPlaylistNameFromPath(playlistPath):
-    return basename(playlistPath).split('.')[0]
+    return splitext(basename(playlistPath))[0]
 
 
 # Classes
