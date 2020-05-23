@@ -1,21 +1,18 @@
 ## Stage 1: Build environment
-FROM debian AS environment
+FROM alpine AS environment
 
 # Configure environment
-ENV DEBIAN_FRONTEND=noninteractive SSL_CERT_DIR=/etc/ssl/certs GTK_THEME=Adwaita:dark
+ENV NO_AT_BRIDGE=1 GTK_THEME=Adwaita:dark
 
 # Install dependencies
-RUN apt update && \
-        apt install -y apt-utils && \
-        apt install -y \
-		gir1.2-gtk-3.0 \
-		python3-gi \
-		python3-gi-cairo \
-		python3-lxml \
-		dbus-x11 \
-		ca-certificates && \
-        update-ca-certificates --fresh && \
-	rm -rf /var/lib/apt/lists/*
+RUN apk add python3 \
+	py3-gobject3 \
+	py3-lxml \
+	gtk+3.0 \
+	libcanberra-gtk3 \
+	ttf-cantarell \
+	adwaita-icon-theme \
+	font-noto
 
 
 ## Stage 2: Run app
