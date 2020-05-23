@@ -87,7 +87,7 @@ class Controller(Application):
 
         # Set app title and logo in gnome's top bar
         self.view.set_wmclass('Flow Dashboard', 'Flow Dashboard')
-        self.view.set_icon_from_file('gallery/logo.png')
+        self.view.set_icon_from_file('src/resources/logo.png')
 
         # Make the GUI visible
         self.view.show_all()
