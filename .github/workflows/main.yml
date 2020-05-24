@@ -1,0 +1,40 @@
+name: Build and Publish Docker Image to Docker Hub
+
+# Triggers the workflow on push events on the master branch
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    # The type of environment that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Checks out the repository under $GITHUB_WORKSPACE, so the job can access it
+    - name: Check out source code
+      uses: actions/checkout@master
+
+      # Builds and pushes a docker image of the source code to Docker Hub
+    - name: Build and push Docker image
+      uses: docker/build-push-action@master
+      with:
+
+        # Docker Hub credentials
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+        # Docker repository to tag the image with
+        repository: rastapank/flow-dashboard
+
+        # Automatically tags the built image with the git reference as per the readme
+        tag_with_ref: true
+
+        # Automatically tags the built image with the git short SHA as per the readme
+        tag_with_sha: true
+
+        # Adds labels with git repository information to the built image
+        add_git_labels: true

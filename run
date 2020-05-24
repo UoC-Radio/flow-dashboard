@@ -4,17 +4,19 @@ sharedDir=schedules
 mkdir -p $sharedDir
 
 if [ "$1" = "--quick" ]; then
-	repo=eliaspap
+	repo=rastapank/flow-dashboard:latest
+	containerName=flow-dashboard-upstream
 else
-	repo=uoc-radio
+	repo=rastapank/flow-dashboard:local-build
+	containerName=flow-dashboard-local
 fi
 
 if [ -d "$sharedDir" ]; then
-	sharedHostPath=`pwd`/$sharedDir
-	sharedContainerPath=/opt/flow-dashboard/$sharedDir
-	docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $sharedHostPath:$sharedContainerPath --name flow-dashboard $repo/flow-dashboard
+	sharedDirPathOnHost=`pwd`/$sharedDir
+	sharedDirPathOnContainer=/opt/flow-dashboard/$sharedDir
+	docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $sharedDirPathOnHost:$sharedDirPathOnContainer --name $containerName $repo
 
 else
 	echo "[!] Shared directory \"$sharedDir\" not found. Manual copy of the schedule to/from containers is required."
-	docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name flow-dashboard $repo/flow-dashboard
+	docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name $containerName $repo
 fi
