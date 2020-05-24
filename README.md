@@ -42,4 +42,4 @@ Docker support for this app is tested on Linux distros with X11 server.
 
 ## Credits
 [ggalan87](https://github.com/ggalan87) for his advice on GUI design  
-[looselyrigorous](https://github.com/looselyrigorous) for his CSS styling ideas.
+[looselyrigorous](https://github.com/looselyrigorous) for his CSS styling ideas
