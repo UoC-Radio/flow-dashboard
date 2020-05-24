@@ -91,11 +91,11 @@ MENU = """<?xml version="1.0" encoding="UTF-8"?>
       <section>
         <item>
           <attribute name="action">win.import_xml</attribute>
-          <attribute name="label" translatable="yes">Import XML ...</attribute>
+          <attribute name="label" translatable="yes">Import Schedule ...</attribute>
         </item>
         <item>
           <attribute name="action">win.export_xml</attribute>
-          <attribute name="label" translatable="yes">Export XML ...</attribute>
+          <attribute name="label" translatable="yes">Export Schedule ...</attribute>
         </item>
       </section>
   </menu>
