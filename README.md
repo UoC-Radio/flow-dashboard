@@ -1,4 +1,4 @@
-# flow-dashboard
+# flow-dashboard ![](https://github.com/UoC-Radio/flow-dashboard/workflows/docker%20build/badge.svg)
 #### A GTK+ based GUI generator of the radio station's on-air schedule.
 
 This is a graphical XML generator and database front-end application. It acts as the GUI of [Audio Scheduler](https://github.com/UoC-Radio/audio-scheduler/). It aims to:

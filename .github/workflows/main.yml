@@ -1,4 +1,5 @@
-name: Build and Publish Docker Image to Docker Hub
+# Build and Publish Docker Image to Docker Hub
+name: docker build
 
 # Triggers the workflow on push events on the master branch
 on:
