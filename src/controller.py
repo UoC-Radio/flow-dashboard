@@ -151,8 +151,8 @@ class Controller(Application):
                     else:
                         # Zone already exists in database.
                         # Notify the user and let him retry.
-                        self.view.Dialogs.showMessagePopup(addZoneDialog,
-                            MessageType.ERROR, 'Error', 'Zone already exists.')
+                        self.view.dialogs.MessagePopup(addZoneDialog, MessageType.ERROR,
+                        'Error', 'Zone already exists.').show()
                 else:
                     break
             addZoneDialog.destroy()
@@ -288,8 +288,8 @@ class Controller(Application):
                 self.model.schedule[dayIndex][path][column] = newString
             elif not self.model.zoneExistsInDatabase(newString):
                 # New zone does not exist in database. Notify the user.
-                self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error',
-                                                   'Zone does not exist in database.')
+                self.view.dialogs.MessagePopup(self.view, MessageType.ERROR, 'Error',
+                                               'Zone does not exist in database.').show()
             elif self.model.schedule[dayIndex][path][column] != newString:
                 # User changes a zone's name in Flow Schedule.
                 # Update the model accordingly.
@@ -310,8 +310,8 @@ class Controller(Application):
                 self.model.editZoneNameInDatabase(oldZoneName, newString)
             elif self.model.zones[path][column] != newString:
                 # New zone already exists in database. Notify the user.
-                self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error',
-                                                   'Zone already exists.')
+                self.view.dialogs.MessagePopup(self.view, MessageType.ERROR, 'Error',
+                                               'Zone already exists.').show()
 
         def onZoneInspectorRowEditingStarted(self, renderer, editable, path, column):
             """ Activate autocompletion in the Zone Inspector cell that is being edited.
@@ -339,8 +339,8 @@ class Controller(Application):
                 self.model.zoneInspector[zoneSelected][path][column] = newString
             elif not self.model.playlistExistsInDatabase(newString):
                 # New playlist does not exist in database. Notify the user.
-                self.view.Dialogs.showMessagePopup(self.view, MessageType.ERROR, 'Error',
-                                                   'Playlist does not exist in database.')
+                self.view.dialogs.MessagePopup(self.view, MessageType.ERROR, 'Error',
+                                               'Playlist does not exist in database.').show()
             elif self.model.zoneInspector[zoneSelected][path][column] != newString:
                 # User changes a playlist's name in Zone Inspector.
                 # Update the model accordingly.
@@ -591,10 +591,10 @@ class Controller(Application):
                     tree = ET.parse(inputXmlFile, parser)
                 except Exception as e:
                     print('Failed to parse input XML.\n' + str(e))
-                    idle_add(self.view.Dialogs.showMessagePopup, self.view,
+                    idle_add(self.view.dialogs.MessagePopup(self.view,
                              MessageType.ERROR, 'Error',
                              'Failed to parse input XML.',
-                             str(e), 'Import aborted.')
+                             str(e), 'Import aborted.').show)
                     idle_add(destroyProgressBar)
                     return
             idle_add(updateProgressBar)
@@ -616,9 +616,9 @@ class Controller(Application):
                     return
             else:
                 print('Validation of input won\'t be performed.')
-                idle_add(self.view.Dialogs.showMessagePopup, self.view,
+                idle_add(self.view.dialogs.MessagePopup(self.view,
                          MessageType.WARNING, 'Warning',
-                         'Validation of input won\'t be performed.')
+                         'Validation of input won\'t be performed.').show)
             idle_add(updateProgressBar)
             sleep(0.1)
 
@@ -749,9 +749,9 @@ class Controller(Application):
                     return
             else:
                 print('Validation of output won\'t be performed.')
-                idle_add(self.view.Dialogs.showMessagePopup, self.view,
+                idle_add(self.view.dialogs.MessagePopup(self.view,
                          MessageType.WARNING, 'Warning',
-                         'Validation of output won\'t be performed.')
+                         'Validation of output won\'t be performed.').show)
             idle_add(updateProgressBar)
             sleep(0.1)
 
@@ -759,8 +759,8 @@ class Controller(Application):
             with open(outputXmlPath, 'w') as f:
                 dom = parseString(ET.tostring(weekElement))
                 f.write(dom.toprettyxml(indent='\t', encoding='UTF-8').decode())
-                idle_add(self.view.Dialogs.showMessagePopup, self.view,
-                         MessageType.INFO, 'Info', 'Export successful.')
+                idle_add(self.view.dialogs.MessagePopup(self.view,
+                         MessageType.INFO, 'Info', 'Export successful.').show)
             idle_add(updateProgressBar)
             sleep(0.1)
             idle_add(destroyProgressBar)
@@ -823,18 +823,18 @@ class Controller(Application):
                                      XSD_SCHEMA_FALLBACK.encode('utf-8')))
                 except Exception as e:
                     print('Failed to parse XSD schema.\n' + str(e))
-                    idle_add(self.view.Dialogs.showMessagePopup, self.view,
+                    idle_add(self.view.dialogs.MessagePopup(self.view,
                              MessageType.ERROR, 'Error',
-                             'Failed to parse XSD schema.', str(e))
+                             'Failed to parse XSD schema.', str(e)).show)
             else:
                 print('Got XSD Schema from', XSD_SCHEMA_URL)
                 try:
                     self.xmlSchema = ET.XMLSchema(ET.parse(xsdSchemaFile))
                 except Exception as e:
                     print('Failed to parse XSD schema.\n' + str(e))
-                    idle_add(self.view.Dialogs.showMessagePopup, self.view,
+                    idle_add(self.view.dialogs.MessagePopup(self.view,
                              MessageType.ERROR, 'Error',
-                             'Failed to parse XSD schema.', str(e))
+                             'Failed to parse XSD schema.', str(e)).show)
 
         def validateXML(self, rootElement, failureMessage):
             """ Validate the contents of rootElement.
@@ -845,9 +845,9 @@ class Controller(Application):
                 self.xmlSchema.assertValid(rootElement)
             except Exception as e:
                 print('Validation failed.\n' + str(e))
-                idle_add(self.view.Dialogs.showMessagePopup, self.view,
-                         MessageType.ERROR, 'Error',
-                         'Validation failed.', str(e), failureMessage)
+                idle_add(self.view.dialogs.MessagePopup(self.view,
+                MessageType.ERROR, 'Error', 'Validation failed.',
+                    str(e), failureMessage).show)
                 return False
             else:
                 print('Validation successful.')

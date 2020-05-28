@@ -314,18 +314,23 @@ class View(Gtk.ApplicationWindow):
     class Dialogs:
         """ All the dialogs that might be displayed. """
 
-        def showMessagePopup(parent, type, title, message, details='', consequence=''):
-            errorMessagePopup = Gtk.MessageDialog(parent, 0, type,
-                                                  Gtk.ButtonsType.OK, title)
-            errorMessagePopup.format_secondary_text(message)
-            messageArea = errorMessagePopup.get_message_area()
-            if details != '':
-                messageArea.add(Gtk.Label(details))
-            if consequence != '':
-                messageArea.add(Gtk.Label(consequence))
-            messageArea.show_all()
-            errorMessagePopup.run()
-            errorMessagePopup.destroy()
+        class MessagePopup(Gtk.MessageDialog):
+
+            def __init__(self, parent, type, title, message, details='', consequence=''):
+                Gtk.MessageDialog.__init__(self, parent=parent, flags=0,
+                                           type=type, buttons=Gtk.ButtonsType.OK,
+                                           message_format=title)
+                self.format_secondary_text(message)
+                messageArea = self.get_message_area()
+                if details != '':
+                    messageArea.add(Gtk.Label(details))
+                if consequence != '':
+                    messageArea.add(Gtk.Label(consequence))
+                messageArea.show_all()
+
+            def show(self):
+                self.run()
+                self.destroy()
 
 
         class AddZone(Gtk.Dialog):
