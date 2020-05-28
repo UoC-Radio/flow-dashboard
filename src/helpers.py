@@ -49,6 +49,18 @@ def getHoursModel():
 def getPlaylistNameFromPath(playlistPath):
     return splitext(basename(playlistPath))[0]
 
+def addPlaylistToZone(playlistName, zoneName, model):
+    # Add playlist to selected zone as Main playlist.
+    # If the zone has already a Main playlist, add it as Intermediate.
+    if not model.zoneHasMainPlaylist(zoneName):
+        playlist = Playlist(playlistName,
+                            'Main', True, '', '', '1', '1', '0', '1')
+    else:
+        playlist = Playlist(playlistName,
+                            'Intermediate', True, '30', '1', '1', '1',
+                            '0', '1')
+    model.addPlaylistToZone(zoneName, playlist)
+
 
 # Classes
 

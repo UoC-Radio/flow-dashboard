@@ -29,8 +29,8 @@ from urllib.request import urlopen
 from threading import Thread
 from time import sleep
 
-from helpers import Playlist, getPlaylistNameFromPath, MENU, XSD_SCHEMA_URL,\
-                    XSD_SCHEMA_FALLBACK, WEEK, APP_TITLE, getHoursModel
+from helpers import Playlist, getPlaylistNameFromPath, addPlaylistToZone,\
+                    MENU, XSD_SCHEMA_URL, XSD_SCHEMA_FALLBACK, WEEK, APP_TITLE, getHoursModel
 from view import View
 from model import Model
 
@@ -202,6 +202,22 @@ class Controller(Application):
             if rowToRemove is not None:
                 self.model.removePlaylistFromDatabase(rowToRemove)
 
+        def onAddZoneToScheduleButtonClicked(self, button):
+            """ Add selected zone to the selected day of the Flow Schedule.
+
+            Trigger:
+                User clicks the "+" button in Flow Schedule header bar.
+            """
+            # Add the selected Zone to Flow Schedule.
+            # If no Zone row is selected, nothing happens.
+            zoneToAdd = self.view.zones.get_selection().get_selected()[1]
+            if zoneToAdd is not None:
+                zoneName = self.model.zones[
+                           self.view.zones.get_selection().get_selected()[1]
+                           ][0]
+                selectedDayIndex = self.view.scheduleNotebook.get_current_page()
+                self.model.addZoneToSchedule(selectedDayIndex, zoneName)
+
         def onRemoveZoneFromScheduleButtonClicked(self, button):
             """ Remove selected occurrence of a zone in the Flow Schedule.
 
@@ -215,6 +231,24 @@ class Controller(Application):
                           selectedDayIndex].get_selection().get_selected()[1]
             if rowToRemove is not None:
                 self.model.removeZoneFromSchedule(selectedDayIndex, rowToRemove)
+
+        def onAddPlaylistToZoneButtonClicked(self, button):
+            """ Add selected playlist to selected zone.
+
+            Trigger:
+                User clicks the "+" button in Zone Inspector header bar.
+            """
+            # Add the selected Playlist to Zone Inspector.
+            # If no Playlist row is selected, nothing happens.
+            playlistToAdd = self.view.playlists.get_selection().get_selected()[1]
+            if playlistToAdd is not None:
+                playlistName = self.model.playlists[
+                               self.view.playlists.get_selection().get_selected()[1]
+                               ][0]
+                zoneName = self.model.zones[
+                           self.view.zones.get_selection().get_selected()[1]
+                           ][0]
+                addPlaylistToZone(playlistName, zoneName, self.model)
 
         def onRemovePlaylistFromZoneButtonClicked(self, button):
             """ Remove selected playlist from selected zone.
@@ -377,21 +411,11 @@ class Controller(Application):
             Trigger:
                 User drops a Playlist row in the Zone Inspector.
             """
-            selectedDayIndex = self.view.scheduleNotebook.get_current_page()
             zoneSelected = self.model.zones[
                            self.view.zones.get_selection().get_selected()[1]
                            ][0]
-            # Add dropped playlist to selected zone as Main playlist,
-            # getting its name from "data" buffer.
-            # If the zone has already a Main playlist, add it as Intermediate.
-            if not self.model.zoneHasMainPlaylist(zoneSelected):
-                playlist = Playlist(data.get_data().decode('unicode-escape'),
-                                    'Main', True, '', '', '1', '1', '0', '1')
-            else:
-                playlist = Playlist(data.get_data().decode('unicode-escape'),
-                                    'Intermediate', True, '30', '1', '1', '1',
-                                    '0', '1')
-            self.model.addPlaylistToZone(zoneSelected, playlist)
+            # Add dropped playlist to selected zone, getting its name from "data" buffer.
+            addPlaylistToZone(data.get_data().decode('unicode-escape'), zoneSelected, self.model)
 
         def onZoneRowSelected(self, selection):
             """ Update the GUI.
@@ -411,12 +435,22 @@ class Controller(Application):
                     self.view.zoneInspector.show()
                 # Enable "-" button in Zones header bar
                 self.view.removeZoneButton.set_sensitive(True)
+                # Enable "+" button in Zone Inspector header bar, if there is a selected playlist
+                playlistRowSelected = self.view.playlists.get_selection().get_selected()[1]
+                if playlistRowSelected is not None:
+                    self.view.addPlaylistToZoneButton.set_sensitive(True)
+                # Enable "+" button in Flow Schedule header bar
+                self.view.addZoneToScheduleButton.set_sensitive(True)
             else:
                 # No zone is selected
                 # Hide Zone Inspector
                 self.view.zoneInspector.hide()
                 # Disable "-" button in Zones header bar
                 self.view.removeZoneButton.set_sensitive(False)
+                # Disable "+" button in Zone Inspector header bar
+                self.view.addPlaylistToZoneButton.set_sensitive(False)
+                # Disable "+" button in Flow Schedule header bar
+                self.view.addZoneToScheduleButton.set_sensitive(False)
 
         def onPlaylistRowSelected(self, selection):
             """ Update the GUI.
@@ -428,9 +462,15 @@ class Controller(Application):
             if playlistRowSelected is not None:
                 # Enable "-" button in Playlists header bar
                 self.view.removePlaylistButton.set_sensitive(True)
+                # Enable "+" button in Zone Inspector header bar, if there is a selected zone
+                zoneRowSelected = self.view.zones.get_selection().get_selected()[1]
+                if zoneRowSelected is not None:
+                    self.view.addPlaylistToZoneButton.set_sensitive(True)
             else:
                 # Disable "-" button in Playlists header bar
                 self.view.removePlaylistButton.set_sensitive(False)
+                # Disable "+" button in Zone Inspector header bar
+                self.view.addPlaylistToZoneButton.set_sensitive(False)
 
         def onScheduleRowSelected(self, selection):
             """ Update the GUI.

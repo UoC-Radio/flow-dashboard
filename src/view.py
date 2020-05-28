@@ -90,6 +90,18 @@ class View(Gtk.ApplicationWindow):
             'clicked', self.callbacks.onRemoveZoneFromScheduleButtonClicked)
         self.removeZoneFromScheduleButton.set_sensitive(False)
         self.scheduleHeaderBar.pack_end(self.removeZoneFromScheduleButton)
+
+        # Add zone to schedule button
+        self.addZoneToScheduleButton = Gtk.Button.new_from_icon_name(
+            'list-add-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
+        self.addZoneToScheduleButton.get_style_context().add_class('plus-button')
+        self.addZoneToScheduleButton.set_tooltip_markup(
+            'Add selected <i><b>zone</b></i> to selected <i><b>day</b></i>')
+        self.addZoneToScheduleButton.connect(
+            'clicked', self.callbacks.onAddZoneToScheduleButtonClicked)
+        self.addZoneToScheduleButton.set_sensitive(False)
+        self.scheduleHeaderBar.pack_end(self.addZoneToScheduleButton)
+
         self.scheduleBox.add(self.scheduleHeaderBar)
 
         # Weekly Schedule View
@@ -190,6 +202,17 @@ class View(Gtk.ApplicationWindow):
             'clicked', self.callbacks.onRemovePlaylistFromZoneButtonClicked)
         self.removePlaylistFromZoneButton.set_sensitive(False)
         self.zoneInspectorHeaderBar.pack_end(self.removePlaylistFromZoneButton)
+
+        # Add playlist to zone button
+        self.addPlaylistToZoneButton = Gtk.Button.new_from_icon_name(
+            'list-add-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
+        self.addPlaylistToZoneButton.get_style_context().add_class('plus-button')
+        self.addPlaylistToZoneButton.set_tooltip_markup('Add selected <i><b>playlist</b></i> to selected <i><b>zone</b></i>')
+        self.addPlaylistToZoneButton.connect(
+            'clicked', self.callbacks.onAddPlaylistToZoneButtonClicked)
+        self.addPlaylistToZoneButton.set_sensitive(False)
+        self.zoneInspectorHeaderBar.pack_end(self.addPlaylistToZoneButton)
+
         self.zoneInspectorBox.add(self.zoneInspectorHeaderBar)
 
         # Zone Inspector View
