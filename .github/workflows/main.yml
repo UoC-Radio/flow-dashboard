@@ -34,8 +34,5 @@ jobs:
         # Automatically tags the built image with the git reference as per the readme
         tag_with_ref: true
 
-        # Automatically tags the built image with the git short SHA as per the readme
-        tag_with_sha: true
-
         # Adds labels with git repository information to the built image
         add_git_labels: true
