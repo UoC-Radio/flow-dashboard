@@ -82,14 +82,20 @@ class Playlist:
 # Embedded files
 
 CSS = """
-.minus-button {
-    background-color: darkred;
+.button {
     background-blend-mode: luminosity;
 }
 
-.plus-button {
+.button:disabled {
+    background-color: gray;
+}
+
+.button-minus {
+    background-color: darkred;
+}
+
+.button-plus {
     background-color: darkgreen;
-    background-blend-mode: luminosity;
 }
 
 progress, trough {

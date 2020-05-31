@@ -83,7 +83,8 @@ class View(Gtk.ApplicationWindow):
         self.removeZoneFromScheduleButton = Gtk.Button.new_from_icon_name(
                                             'list-remove-symbolic',
                                             Gtk.IconSize(Gtk.IconSize.BUTTON))
-        self.removeZoneFromScheduleButton.get_style_context().add_class('minus-button')
+        self.removeZoneFromScheduleButton.get_style_context().add_class('button')
+        self.removeZoneFromScheduleButton.get_style_context().add_class('button-minus')
         self.removeZoneFromScheduleButton.set_tooltip_markup(
             'Remove selected <i><b>zone</b></i> from selected <i><b>day</b></i>')
         self.removeZoneFromScheduleButton.connect(
@@ -94,7 +95,8 @@ class View(Gtk.ApplicationWindow):
         # Add zone to schedule button
         self.addZoneToScheduleButton = Gtk.Button.new_from_icon_name(
             'list-add-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
-        self.addZoneToScheduleButton.get_style_context().add_class('plus-button')
+        self.addZoneToScheduleButton.get_style_context().add_class('button')
+        self.addZoneToScheduleButton.get_style_context().add_class('button-plus')
         self.addZoneToScheduleButton.set_tooltip_markup(
             'Add selected <i><b>zone</b></i> to selected <i><b>day</b></i>')
         self.addZoneToScheduleButton.connect(
@@ -137,14 +139,16 @@ class View(Gtk.ApplicationWindow):
         self.zoneHeaderBar = Gtk.HeaderBar(title='Zones', subtitle='Their database')
         self.removeZoneButton = Gtk.Button. new_from_icon_name(
             'list-remove-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
-        self.removeZoneButton.get_style_context().add_class('minus-button')
+        self.removeZoneButton.get_style_context().add_class('button')
+        self.removeZoneButton.get_style_context().add_class('button-minus')
         self.removeZoneButton.set_tooltip_markup('Remove selected <i><b>zone</b></i> from <i><b>database</b></i> and <i><b>schedule</b></i>')
         self.removeZoneButton.connect('clicked', self.callbacks.onRemoveZoneButtonClicked)
         self.removeZoneButton.set_sensitive(False)
         self.zoneHeaderBar.pack_end(self.removeZoneButton)
         button = Gtk.Button. new_from_icon_name('list-add-symbolic',
                                                 Gtk.IconSize(Gtk.IconSize.BUTTON))
-        button.get_style_context().add_class('plus-button')
+        button.get_style_context().add_class('button')
+        button.get_style_context().add_class('button-plus')
         button.set_tooltip_markup('Add a new <i><b>zone</b></i> to <i><b>database</b></i>')
         button.connect('clicked', self.callbacks.onAddZoneButtonClicked)
         self.zoneHeaderBar.pack_end(button)
@@ -186,7 +190,8 @@ class View(Gtk.ApplicationWindow):
                                                     subtitle="Contents of selected zone")
         self.removePlaylistFromZoneButton = Gtk.Button.new_from_icon_name(
             'list-remove-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
-        self.removePlaylistFromZoneButton.get_style_context().add_class('minus-button')
+        self.removePlaylistFromZoneButton.get_style_context().add_class('button')
+        self.removePlaylistFromZoneButton.get_style_context().add_class('button-minus')
         self.removePlaylistFromZoneButton.set_tooltip_markup('Remove selected <i><b>playlist</b></i> from selected <i><b>zone</b></i>')
         self.removePlaylistFromZoneButton.connect(
             'clicked', self.callbacks.onRemovePlaylistFromZoneButtonClicked)
@@ -196,7 +201,8 @@ class View(Gtk.ApplicationWindow):
         # Add playlist to zone button
         self.addPlaylistToZoneButton = Gtk.Button.new_from_icon_name(
             'list-add-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
-        self.addPlaylistToZoneButton.get_style_context().add_class('plus-button')
+        self.addPlaylistToZoneButton.get_style_context().add_class('button')
+        self.addPlaylistToZoneButton.get_style_context().add_class('button-plus')
         self.addPlaylistToZoneButton.set_tooltip_markup('Add selected <i><b>playlist</b></i> to selected <i><b>zone</b></i>')
         self.addPlaylistToZoneButton.connect(
             'clicked', self.callbacks.onAddPlaylistToZoneButtonClicked)
@@ -261,7 +267,8 @@ class View(Gtk.ApplicationWindow):
                                                subtitle='Their database')
         self.removePlaylistButton = Gtk.Button. new_from_icon_name(
             'list-remove-symbolic', Gtk.IconSize(Gtk.IconSize.BUTTON))
-        self.removePlaylistButton.get_style_context().add_class('minus-button')
+        self.removePlaylistButton.get_style_context().add_class('button')
+        self.removePlaylistButton.get_style_context().add_class('button-minus')
         self.removePlaylistButton.set_tooltip_markup(
             'Remove selected <i><b>playlist</b></i> from <i><b>database</b></i> and <i><b>schedule</b></i>')
         self.removePlaylistButton.connect('clicked',
@@ -270,7 +277,8 @@ class View(Gtk.ApplicationWindow):
         self.playlistHeaderBar.pack_end(self.removePlaylistButton)
         button = Gtk.Button. new_from_icon_name('list-add-symbolic',
                                                 Gtk.IconSize(Gtk.IconSize.BUTTON))
-        button.get_style_context().add_class('plus-button')
+        button.get_style_context().add_class('button')
+        button.get_style_context().add_class('button-plus')
         button.set_tooltip_markup('Add a new <i><b>playlist</b></i> to <i><b>database</b></i>')
         button.connect('clicked', self.callbacks.onAddPlaylistButtonClicked)
         self.playlistHeaderBar.pack_end(button)
