@@ -110,11 +110,6 @@ class View(Gtk.ApplicationWindow):
         self.schedule = {}
         for dayIndex in range(7):
             self.schedule[dayIndex] = Gtk.TreeView()
-            self.schedule[dayIndex].enable_model_drag_dest(
-                [Gtk.TargetEntry.new('UTF8_STRING', Gtk.TargetFlags.SAME_APP, 0)],
-                Gdk.DragAction.COPY)
-            self.schedule[dayIndex].connect('drag-data-received',
-                                            self.callbacks.onDragDataDroppedZone)
             self.schedule[dayIndex].get_selection().connect(
                 'changed', self.callbacks.onScheduleRowSelected)
             for i, columnTitle in enumerate(['Hour', 'Name']):
@@ -157,11 +152,6 @@ class View(Gtk.ApplicationWindow):
 
         # Zone View
         self.zones = Gtk.TreeView()
-        self.zones.enable_model_drag_source(
-            Gdk.ModifierType.BUTTON1_MASK,
-            [Gtk.TargetEntry.new('UTF8_STRING', Gtk.TargetFlags.SAME_APP, 0)],
-            Gdk.DragAction.COPY)
-        self.zones.connect('drag-data-get', self.callbacks.onDragDataDraggedZone)
         self.zones.get_selection().connect('changed', self.callbacks.onZoneRowSelected)
         columnTitle = 'Name'
         renderer = Gtk.CellRendererText(editable=True)
@@ -217,11 +207,6 @@ class View(Gtk.ApplicationWindow):
 
         # Zone Inspector View
         self.zoneInspector = Gtk.TreeView()
-        self.zoneInspector.enable_model_drag_dest(
-            [Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags.SAME_APP, 0)],
-            Gdk.DragAction.COPY)
-        self.zoneInspector.connect('drag-data-received',
-                                   self.callbacks.onDragDataDroppedPlaylist)
         self.zoneInspector.get_selection().connect(
             'changed', self.callbacks.onZoneInspectorRowSelected)
         columnTitle = 'Name'
@@ -293,11 +278,6 @@ class View(Gtk.ApplicationWindow):
 
         # Playlist View
         self.playlists = Gtk.TreeView()
-        self.playlists.enable_model_drag_source(
-            Gdk.ModifierType.BUTTON1_MASK,
-            [Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags.SAME_APP, 0)],
-            Gdk.DragAction.COPY)
-        self.playlists.connect('drag-data-get', self.callbacks.onDragDataDraggedPlaylist)
         self.playlists.get_selection().connect('changed',
                                                self.callbacks.onPlaylistRowSelected)
         for i, columnTitle in enumerate(['Name', 'Path']):

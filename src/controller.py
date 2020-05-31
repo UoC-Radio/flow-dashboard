@@ -371,52 +371,6 @@ class Controller(Application):
             self.model.zoneInspector[zoneSelected][path][column] = not\
             self.model.zoneInspector[zoneSelected][path][column]
 
-        def onDragDataDraggedZone(self, zones, drag_context, data, info, time):
-            """ Save dragged zone's name.
-
-            Trigger:
-                User begins dragging a Zone row.
-            """
-            # Write dragged zone's name in "data" buffer
-            zoneDragged = self.model.zones[zones.get_selection().get_selected()[1]][0]
-            data.set_text(zoneDragged, -1)
-
-        def onDragDataDraggedPlaylist(self, playlists, drag_context, data, info, time):
-            """ Save dragged playlist's name.
-
-            Trigger:
-                User begins dragging a Playlist row.
-            """
-            # Write dragged playlist's name in "data" buffer
-            playlistDragged = self.model.playlists[
-                              playlists.get_selection().get_selected()[1]
-                              ][0]
-            data.set_text(playlistDragged, -1)
-
-        def onDragDataDroppedZone(self, schedule, drag_context, x, y, data, info, time):
-            """ Retrieve dropped zone's name and update selected day.
-
-            Trigger:
-                User drops a Zone row in the Flow Schedule.
-            """
-            selectedDayIndex = self.view.scheduleNotebook.get_current_page()
-            # Add dropped zone to selected Flow Schedule day, getting its name
-            # from "data" buffer.
-            self.model.addZoneToSchedule(selectedDayIndex, data.get_text())
-
-        def onDragDataDroppedPlaylist(self, zoneInspector, drag_context, x, y,
-                                      data, info, time):
-            """ Retrieve dropped playlist's name and update selected zone.
-
-            Trigger:
-                User drops a Playlist row in the Zone Inspector.
-            """
-            zoneSelected = self.model.zones[
-                           self.view.zones.get_selection().get_selected()[1]
-                           ][0]
-            # Add dropped playlist to selected zone, getting its name from "data" buffer.
-            addPlaylistToZone(data.get_data().decode('unicode-escape'), zoneSelected, self.model)
-
         def onZoneRowSelected(self, selection):
             """ Update the GUI.
 
