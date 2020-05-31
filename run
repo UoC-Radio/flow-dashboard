@@ -30,4 +30,20 @@ $runCommand &
 sleep 2
 
 hostPort=`docker port $containerName | cut -d ":" -f 2`
-echo "[*] Listening on port: $hostPort"
+
+if [ -n "$hostPort" ]; then
+	URL="http://localhost:$hostPort"
+	echo "[*] App is running on: $URL"
+
+	if [ -n "$BROWSER" ]; then
+		$BROWSER $URL
+	elif which xdg-open > /dev/null; then
+		xdg-open $URL
+	elif which gnome-open > /dev/null; then
+		gnome-open $URL
+	elif [ `uname -s` = "Darwin" ]; then
+		open $URL
+	else
+		echo "Could not detect the web browser to use. Please visit: $URL"
+	fi
+fi
