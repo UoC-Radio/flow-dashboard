@@ -29,5 +29,5 @@ echo "[*] Executing: $runCommand"
 $runCommand &
 sleep 2
 
-hostPort=`docker port flow-dashboard-local | cut -d ":" -f 2`
+hostPort=`docker port $containerName | cut -d ":" -f 2`
 echo "[*] Listening on port: $hostPort"
