@@ -1,22 +1,33 @@
 #!/bin/bash
 
-sharedDir=schedules
-mkdir -p $sharedDir
-
 if [ "$1" = "--quick" ]; then
 	repo=rastapank/flow-dashboard:latest
+	docker pull $repo
 	containerName=flow-dashboard-upstream
 else
 	repo=rastapank/flow-dashboard:local-build
 	containerName=flow-dashboard-local
 fi
 
-if [ -d "$sharedDir" ]; then
-	sharedDirPathOnHost=`pwd`/$sharedDir
-	sharedDirPathOnContainer=/opt/flow-dashboard/$sharedDir
-	docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $sharedDirPathOnHost:$sharedDirPathOnContainer --name $containerName $repo
+# Make a shared directory, which can be accessed by both host and container.
+# It can be used for sharing schedule files.
+sharedDirName=schedules
+mkdir -p $sharedDirName
+
+if [ -d "$sharedDirName" ]; then
+	hostSharedDirPath=`pwd`/$sharedDirName
+	containerSharedDirPath=/opt/flow-dashboard/$sharedDirName
+	makeSharedDir="-v $hostSharedDirPath:$containerSharedDirPath"
 
 else
-	echo "[!] Shared directory \"$sharedDir\" not found. Manual copy of the schedule to/from containers is required."
-	docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name $containerName $repo
+	echo "[!] Shared directory \"$sharedDir\" not found. Manual copy of the schedule to/from container is required."
+	makeSharedDir=""
 fi
+
+runCommand="docker run -t --rm -P $makeSharedDir --name $containerName $repo"
+echo "[*] Executing: $runCommand"
+$runCommand &
+sleep 2
+
+hostPort=`docker port flow-dashboard-local | cut -d ":" -f 2`
+echo "[*] Listening on port: $hostPort"

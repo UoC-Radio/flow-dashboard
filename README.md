@@ -38,7 +38,7 @@ To run the app without building it:
 ./quick_run
 ```
 
-Docker support for this app is tested on Linux distros with X11 server.
+The app will run locally as a web application on a random port. The port will be printed on terminal when the app starts.
 
 ## Credits
 [ggalan87](https://github.com/ggalan87) for his advice on GUI design  
