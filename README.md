@@ -33,12 +33,14 @@ To build and run the app from source:
 ./run
 ```
 
-To run the app without building it:
+To download and run the latest version of the app:
 ```
 ./quick_run
 ```
+The above command first updates the app if it is outdated, and then runs it.
 
-The app will run locally as a web application on a random port. The port will be printed on terminal when the app starts.
+
+The app will run locally as a web application.
 
 ## Credits
 [ggalan87](https://github.com/ggalan87) for his advice on GUI design  
