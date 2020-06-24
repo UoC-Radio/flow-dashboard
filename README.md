@@ -25,8 +25,10 @@ python3 ./src/main.py
 ```
 
 ## Build and Run with Docker
-An alternative (and probably easier) way to build and run the app is by using Docker. Besides Docker, you don't need any other dependencies installed.
+An alternative (and probably easier) way to build and run the app is by using Docker. Besides Docker, you don't need any other dependencies installed.  
+The app will run locally as a web application.
 
+### Linux & MacOS
 To build and run the app from source:
 ```
 ./build
@@ -39,8 +41,8 @@ To download and run the latest version of the app:
 ```
 The above command first updates the app if it is outdated, and then runs it.
 
-
-The app will run locally as a web application.
+### Windows
+The app can be deployed by executing Docker commands manually. Check out the provided bash scripts for a hint.
 
 ## Credits
 [ggalan87](https://github.com/ggalan87) for his advice on GUI design  
